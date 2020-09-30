@@ -1,0 +1,24 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="mapimage.MapImage.controller.View1" displayBlock="true">
+	<Shell id="shell">
+		<App id="app">
+			<pages><Page id="page" title="{i18n>title}">
+					<content>
+<TextArea xmlns="sap.m" rows="4" id="area0" placeholder="50.845670000,4.339370000" cols="40"/>
+<!--<VBox id="BoxMapPhoenix">
+  <Label xmlns="sap.m" id="labelMapPhoenix" text="Route in BXL" width="220px"/>
+  <Image id="imageRouteBxl" densityAware="false" width="400px" height="400px" alt="map" 
+  src="/map/mia/1.6/route?apiKey=Mm51eAlu1eWCn7UZ4LR-W6yWKpRyjmWoaFQD8H0X15Y&amp;r0=50.845670000,4.339370000,50.846300000,4.339650000,50.846870000,4.339940000,50.847370000,4.340210000,50.847920000,4.340500000"/>
+         
+</VBox>-->
+<Button xmlns="sap.m" text="Show route" id="button1" press="getRoute"/>
+
+<VBox id="route">
+	<Image id="image" densityAware="false" width="400px" height="400px" alt="map"/>
+</VBox>
+					</content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+	
+</mvc:View>
