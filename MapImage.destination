@@ -1,0 +1,10 @@
+#
+#Wed Sep 30 12:17:18 UTC 2020
+Name=MapImage
+URL=https\://image.maps.ls.hereapi.com
+ProxyType=Internet
+Type=HTTP
+WebIDEEnabled=true
+Authentication=NoAuthentication
+Description=Map image
+WebIDESystem=API
