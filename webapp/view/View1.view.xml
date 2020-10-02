@@ -12,9 +12,49 @@
 </VBox>-->
 <Button xmlns="sap.m" text="Show route" id="button1" press="getRoute"/>
 
+
 <VBox id="route">
 	<Image id="image" densityAware="false" width="400px" height="400px" alt="map"/>
 </VBox>
+
+<Table id="idProductsTable"
+		inset="false"
+		items="{
+			path: '/coordData',
+			sorter: {
+				path: 'Name'
+			}
+		}">
+			<columns>
+					<Column
+				width="12em">
+				<Text text="Given Coordinates" />
+			</Column>
+			<Column
+				width="12em">
+				<Text text="Address" />
+			</Column>
+			<Column
+					width="12em">
+				<Text text="Distance to previous" />
+			</Column>
+			</columns>
+		<items>
+			<ColumnListItem>
+				<cells>
+					<ObjectIdentifier
+						
+						text="{givenCoord}"/>	
+							<Text
+						text="{address}" />
+						<Text
+						text="{distance}" />
+				</cells>
+			</ColumnListItem>
+		</items>
+			</Table>				
+				
+				
 					</content>
 				</Page>
 			</pages>

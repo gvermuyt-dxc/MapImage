@@ -47,6 +47,24 @@
     	"description": "Map Image"
     },
     {
+    	"path": "/revgeocode",
+    	"target": {
+    		"type": "destination",
+    		"name": "HERE_revgeocode",
+    		"entryPath": "/"
+    	},
+    	"description": "HERE Revgeocode"
+    },
+    {
+    	"path": "/fleet",
+    	"target": {
+    		"type": "destination",
+    		"name": "HERE_FleetTelematics",
+    		"entryPath": "/"
+    	},
+    	"description": "HERE Revgeocode"
+    },
+    {
     	"path": "/maproute",
     	"target": {
     		"type": "destination",

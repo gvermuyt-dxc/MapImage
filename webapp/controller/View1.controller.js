@@ -1,6 +1,8 @@
 sap.ui.define(["sap/ui/core/mvc/Controller",
 				"sap/ui/core/util/File",
-               "sap/base/Log"], function (Controller, File, Log) {
+				"sap/ui/model/json/JSONModel",
+				
+               "sap/base/Log"], function (Controller, File, JSONModel,Log) {
 	"use strict";
 	return Controller.extend("mapimage.MapImage.controller.View1", {
 		onInit: function () {},
@@ -26,7 +28,115 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			var sURL = "/map/mia/1.6/route?apiKey=" + APIKey + "&r0=" + strCoord;
 			
 			var oImage = oView.byId("image");
-			oImage.setSrc(sURL);          
+			oImage.setSrc(sURL);  
+			
+//			var arrAt = strCoord.split(",",2);
+//			var strAt = arrAt[0] + "," + arrAt[1];
+
+
+			//split coordinates per 2 => one row in array
+			//add coordinates in array
+			//calculate address & real coordinates (revgeocode)
+			//add result to same row in array
+			//calculate distance between these real coord & previous ones (if any)
+			var gpsData = {};
+			var coordData = [];
+			gpsData.coordData = coordData;
+			
+			
+ 
+
+var strGivenCoord = "";
+var address = "";
+var postalcode = "";
+var city = "";
+var streetCoord = "";
+var distance = "";
+
+
+			
+			var arrCoord = strCoord.split((","));
+			var i;
+			for (i = 0; i < arrCoord.length; i = i+2){
+				//gpsData.coordData.push(coord);
+				strGivenCoord = arrCoord[i] + "," + arrCoord[i+1];
+
+//Get address			
+var aData = jQuery.ajax({
+type: "GET",
+contentType: "application/json",
+url: "/revgeocode/v1/revgeocode",
+dataType: "json",
+data: {
+"apiKey" : APIKey,
+"at": strGivenCoord
+},
+async: false,
+success: function(data, textStatus, jqXHR) {
+
+	if("access" in data.items[0])
+  	  streetCoord = data.items[0].access[0].lat + "," + data.items[0].access[0].lng;
+  	else
+	  streetCoord = data.items[0].position.lat + "," + data.items[0].position.lng;
+var coord = {
+  "givenCoord": strGivenCoord,
+  "address": data.items[0].title,
+  "postalcode": data.items[0].address.postalCode,
+  "city":  data.items[0].address.city,
+  "streetCoord" : streetCoord,
+  "distance": ""
+	
+};
+
+gpsData.coordData.push(coord);
+//alert("success to post");
+},
+error: function(error){
+	debugger;
+	alert("error");
+}
+});
+
+				
+			}
+
+//debugger;
+
+//Calc distance
+//			var arrAt2 = strCoord.split(",",4);
+//			var strAt1 = arrAt2[0] + "," + arrAt2[1];
+//			var strAt2 = arrAt2[2] + "," + arrAt2[3];
+for (i = 1; i < gpsData.coordData.length; i = i+1){
+
+var aDataDist = jQuery.ajax({
+type: "GET",
+contentType: "application/json",
+url: "/fleet/2/calculateroute.json",
+dataType: "json",
+data: {
+"apiKey" : APIKey,
+"waypoint0": gpsData.coordData[i-1].streetCoord,
+"waypoint1": gpsData.coordData[i].streetCoord,
+"mode": "fastest;car;traffic:disabled"
+},
+async: false,
+success: function(data, textStatus, jqXHR) {
+
+//debugger;
+gpsData.coordData[i].distance = data.response.route[0].summary.distance;
+//alert("success to post");
+},
+error: function(error){
+	debugger;
+	alert("error");
+}
+});
+}
+
+//Push JSON to model
+var oModel = new sap.ui.model.json.JSONModel();
+oModel.setData(gpsData);
+oView.setModel(oModel);
 
 		}
 	});
