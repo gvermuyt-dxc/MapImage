@@ -1,11 +1,70 @@
+/* global heremaps:true */
 sap.ui.define(["sap/ui/core/mvc/Controller",
 				"sap/ui/core/util/File",
 				"sap/ui/model/json/JSONModel",
-				
-               "sap/base/Log"], function (Controller, File, JSONModel,Log) {
+				"mapimage/MapImage/libs/heremaps",
+				"sap/ui/Device",
+               "sap/base/Log"], function (Controller, File, JSONModel, heremaps1, Device, Log) {
 	"use strict";
 	return Controller.extend("mapimage.MapImage.controller.View1", {
-		onInit: function () {},
+		onInit: function () {
+			const platform = new H.service.Platform({
+                "apiKey": "Mm51eAlu1eWCn7UZ4LR-W6yWKpRyjmWoaFQD8H0X15Y"
+            });
+debugger;
+            // Obtain the default map types from the platform object:
+var defaultLayers = platform.createDefaultLayers();
+			var oView = null;
+			oView = this.getView();	
+		//	var mymap = oView.byId("vbi");
+			debugger;
+var oGeoMap = this.getView().byId("GeoMap");
+var oMapConfig = {
+"MapProvider": [{
+"name": "HEREMAPS",
+"type": "",
+"description": "",
+"tileX": "256",
+"tileY": "256",
+"maxLOD": "20",
+"copyright": "Tiles Courtesy of HERE Maps",
+"Source": [{
+"id": "s1",
+"url": "https://1.base.maps.ls.hereapi.com/maptile/2.1/streettile/newest/normal.day/{LOD}/{X}/{Y}/256/png8?apiKey=Mm51eAlu1eWCn7UZ4LR-W6yWKpRyjmWoaFQD8H0X15Y" //app_id=HgBBzVzzwlLbdx8JIoQX&app_code=19q37KlwRfPiSTuG2iEnlQ"
+//apiKey=Mm51eAlu1eWCn7UZ4LR-W6yWKpRyjmWoaFQD8H0X15Y
+//POLYGON ((4.365996 50.83897, 4.366828 50.839391, 4.366548 50.839612, 4.36614 50.839406, 4.365817 50.839661, 4.366063 50.839779, 4.366228 50.839865, 4.365948 50.840093, 4.365107 50.839673, 4.3654 50.839447, 4.365584 50.839539, 4.365897 50.839292, 4.365709 50.839197, 4.365996 50.83897))	
+}, {
+"id": "s2",
+"url": "https://2.base.maps.ls.hereapi.com/maptile/2.1/streettile/newest/normal.day/{LOD}/{X}/{Y}/256/png8?apiKey=Mm51eAlu1eWCn7UZ4LR-W6yWKpRyjmWoaFQD8H0X15Y"//app_id=HgBBzVzzwlLbdx8JIoQX&app_code=19q37KlwRfPiSTuG2iEnlQ"
+}
+]
+}],
+"MapLayerStacks": [{
+"name": "DEFAULT",
+"MapLayer": {
+"name": "layer1",
+"refMapProvider": "HEREMAPS",
+"opacity": "1.0",
+"colBkgnd": "RGB(255,255,255)"
+}
+}]
+};
+oGeoMap.setMapConfiguration(oMapConfig);
+
+oGeoMap.setRefMapLayerStack("DEFAULT");
+// Instantiate (and display) a map object:
+/*var map = new H.Map(
+   mymap, // document.getElementById('container-MapImage---View1--map_canvas'), //document.getElementById('__xmlview2--map_canvas')
+    defaultLayers.vector.normal.map,
+    {
+      zoom: 18,
+      center: { lat: 50.85558, lng: 4.35813 }
+    });
+*/
+//    const mapEvent = new H.mapevents.MapEvents(map);
+//    const mapBehavior = new H.mapevents.Behavior(mapEvent);
+
+		},
 		/**
 		 *@memberOf mapimage.MapImage.controller.View1
 		 */
@@ -97,6 +156,7 @@ error: function(error){
 }
 });
 
+
 				
 			}
 
@@ -133,11 +193,55 @@ error: function(error){
 });
 }
 
+
+var aDataGeo = jQuery.ajax({
+type: "GET",
+contentType: "application/json",
+url: "https://gfe.api.here.com/2/search/all.json",
+dataType: "json",
+data: {
+"apiKey" : APIKey,
+    app_id: "HgBBzVzzwlLbdx8JIoQX",
+    app_code: "19q37KlwRfPiSTuG2iEnlQ",
+    layer_id: "10099"
+},
+async: false,
+success: function(data, textStatus, jqXHR) {
+
+debugger;
+var geo = data.geometries[0].geometry;
+geo = geo.replace(/[(]/g, "");
+geo = geo.replace(/[)]/g, "");
+var geo_parts = geo.split(",");
+
+
+//"POLYGON((4.3577357152748135 50.85552751022559, 4.358229241733554 50.85538866602128, 4.3579610208320645 50.855192251562855,4.3574621299552945 50.8553548015185,4.3577357152748135 50.85552751022559))"
+//alert("success to post");
+},
+error: function(error){
+	debugger;
+	alert("error");
+}
+});
+
+
+
 //Push JSON to model
 var oModel = new sap.ui.model.json.JSONModel();
 oModel.setData(gpsData);
 oView.setModel(oModel);
-
+//debugger;
+			var strCoordCorrected = "";
+			for (i = 0; i < gpsData.coordData.length; i = i+1){
+				if(i === 0)
+				  strCoordCorrected = gpsData.coordData[i].streetCoord;
+				else
+				  strCoordCorrected = strCoordCorrected + "," + gpsData.coordData[i].streetCoord;
+			}
+			var sURLCorrected = "/map/mia/1.6/route?apiKey=" + APIKey + "&r0=" + strCoordCorrected;
+			
+			var oImageCorrected = oView.byId("imagecorrected");
+			oImageCorrected.setSrc(sURLCorrected);  
 		}
 	});
 });

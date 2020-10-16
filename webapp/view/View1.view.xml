@@ -1,9 +1,16 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="mapimage.MapImage.controller.View1" displayBlock="true">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" 
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:vbm="sap.ui.vbm"
+controllerName="mapimage.MapImage.controller.View1" displayBlock="true">
 	<Shell id="shell">
 		<App id="app">
 			<pages><Page id="page" title="{i18n>title}">
-					<content>
+				
+					<content>   
+
 <TextArea xmlns="sap.m" rows="4" id="area0" placeholder="50.845670000,4.339370000" cols="40"/>
+
 <!--<VBox id="BoxMapPhoenix">
   <Label xmlns="sap.m" id="labelMapPhoenix" text="Route in BXL" width="220px"/>
   <Image id="imageRouteBxl" densityAware="false" width="400px" height="400px" alt="map" 
@@ -12,48 +19,46 @@
 </VBox>-->
 <Button xmlns="sap.m" text="Show route" id="button1" press="getRoute"/>
 
+        
+		<!--<flexContent>-->
+			<!--<vbm:GeoMap id="vbi" width="100%" height="100%" />-->
+<vbm:GeoMap id="GeoMap" width="100%" height="100%" />
+		<!--</flexContent>-->
+
 
 <VBox id="route">
 	<Image id="image" densityAware="false" width="400px" height="400px" alt="map"/>
 </VBox>
 
-<Table id="idProductsTable"
-		inset="false"
-		items="{
-			path: '/coordData',
-			sorter: {
-				path: 'Name'
-			}
-		}">
+<Table id="idProductsTable" inset="false" items="{    path: '/coordData',    sorter: {     path: 'Name'    }   }">
 			<columns>
-					<Column
-				width="12em">
-				<Text text="Given Coordinates" />
+					<Column width="12em">
+				<Text text="Given Coordinates"/>
 			</Column>
-			<Column
-				width="12em">
-				<Text text="Address" />
+			<Column width="12em">
+				<Text text="Address"/>
 			</Column>
-			<Column
-					width="12em">
-				<Text text="Distance to previous" />
+			<Column width="12em">
+				<Text text="Distance to previous"/>
+			</Column>
+			<Column width="12em">
+				<Text text="Closest road coordinates"/>
 			</Column>
 			</columns>
 		<items>
 			<ColumnListItem>
 				<cells>
-					<ObjectIdentifier
-						
-						text="{givenCoord}"/>	
-							<Text
-						text="{address}" />
-						<Text
-						text="{distance}" />
+					<ObjectIdentifier text="{givenCoord}"/>	
+							<Text text="{address}"/>
+						<Text text="{distance}"/>
+						<Text text="{streetCoord}"/>
 				</cells>
 			</ColumnListItem>
 		</items>
 			</Table>				
-				
+	<VBox id="correctedroute">
+	<Image id="imagecorrected" densityAware="false" width="400px" height="400px" alt="mapcorrected"/>
+</VBox>			
 				
 					</content>
 				</Page>
